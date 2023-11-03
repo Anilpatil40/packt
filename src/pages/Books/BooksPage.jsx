@@ -22,12 +22,25 @@ const BooksPage = () => {
         quantity: 12,
         orderBy: "date.asc",
         page: 1,
+        filters: {},
     });
+    const [filters, setFilters] = useState({});
 
     useEffect(() => {
-        fetch(
-            `/api/v1/books?quantity=${options.quantity}&order=${options.orderBy}&page=${options.page}`
-        )
+        const filters = {};
+        Object.keys(options.filters).map((key) => {
+            filters[key] = options.filters[key]
+                .map((item) => item.filter)
+                .join("~");
+            return null;
+        });
+        const urlParams = {
+            quantity: options.quantity,
+            order: options.orderBy,
+            page: options.page,
+            ...filters,
+        };
+        fetch(`/api/v1/books?${new URLSearchParams(urlParams).toString()}`)
             .then((resp) => resp.json())
             .then((resp) => {
                 setResponse(resp);
@@ -36,6 +49,17 @@ const BooksPage = () => {
                 console.log(error);
             });
     }, [options]);
+
+    useEffect(() => {
+        fetch(`/api/v1/books/filters`)
+            .then((resp) => resp.json())
+            .then((resp) => {
+                setFilters(resp.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
 
     return (
         <Stack>
@@ -105,19 +129,37 @@ const BooksPage = () => {
                                 <Typography>
                                     Filter Results {`(${response?.count})`}
                                 </Typography>
+                                <Typography
+                                    className="ms-auto"
+                                    color={"primary"}
+                                    onClick={() =>
+                                        setOptions((prev) => ({
+                                            ...prev,
+                                            filters: {},
+                                        }))
+                                    }
+                                >
+                                    Clear
+                                </Typography>
                             </Stack>
                             <FilterBar
-                                filters={{
-                                    Genre: ["genre 1", "genre 2"],
-                                    "publication date": ["2022", "2023"],
+                                filters={filters}
+                                selected={options.filters}
+                                onSelect={(value) => {
+                                    setOptions((prev) => ({
+                                        ...prev,
+                                        filters: value,
+                                        page: 1,
+                                    }));
                                 }}
                             />
                         </Stack>
                         <Stack flex={1}>
-                            <Box flex={1} className="row p-2">
-                                {response?.data?.map((book) => {
+                            <Box className="row p-2">
+                                {response?.data?.map((book, index) => {
                                     return (
                                         <BookCard
+                                            key={index}
                                             title={book.title}
                                             description={book.description}
                                             image={book.image}
@@ -132,9 +174,14 @@ const BooksPage = () => {
                             <Stack className="my-3" alignItems={"center"}>
                                 <Pagination
                                     page={options.page}
-                                    count={Math.ceil(
-                                        response?.count / options.quantity
-                                    )}
+                                    count={
+                                        response?.count
+                                            ? Math.ceil(
+                                                  response?.count /
+                                                      options.quantity
+                                              )
+                                            : 0
+                                    }
                                     variant="outlined"
                                     shape="rounded"
                                     onChange={(e, page) => {

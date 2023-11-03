@@ -5,12 +5,11 @@ import {
     AccordionSummary,
     Checkbox,
     FormControlLabel,
-    FormGroup,
     Stack,
     Typography,
 } from "@mui/material";
 
-export const FilterBar = ({ filters = {} }) => {
+export const FilterBar = ({ filters = {}, selected = {}, onSelect }) => {
     return (
         <Stack spacing={2}>
             {Object.keys(filters).map((key, index) => {
@@ -28,15 +27,59 @@ export const FilterBar = ({ filters = {} }) => {
                         </AccordionSummary>
                         <AccordionDetails>
                             <Stack>
-                                {filters[key].map((item) => (
-                                    <FormGroup>
+                                {filters[key].map((item, index) => (
+                                    <Stack
+                                        direction={"row"}
+                                        alignItems={"center"}
+                                        key={index}
+                                    >
                                         <FormControlLabel
                                             control={
-                                                <Checkbox defaultChecked />
+                                                <Checkbox
+                                                    checked={
+                                                        selected[key]?.find(
+                                                            (obj) =>
+                                                                obj.filter ===
+                                                                item.filter
+                                                        )
+                                                            ? true
+                                                            : false
+                                                    }
+                                                    onChange={(e, checked) => {
+                                                        if (e.target.checked) {
+                                                            if (!selected[key])
+                                                                selected[key] =
+                                                                    [];
+                                                            selected[key].push(
+                                                                item
+                                                            );
+                                                            onSelect?.(
+                                                                selected
+                                                            );
+                                                        } else {
+                                                            if (!selected[key])
+                                                                return;
+                                                            selected[key] =
+                                                                selected[
+                                                                    key
+                                                                ].filter(
+                                                                    (obj) =>
+                                                                        obj.filter !==
+                                                                        item.filter
+                                                                );
+                                                            onSelect?.(
+                                                                selected
+                                                            );
+                                                        }
+                                                    }}
+                                                />
                                             }
-                                            label={item}
+                                            label={item.filter}
                                         />
-                                    </FormGroup>
+                                        <Typography className="ms-auto">
+                                            {item.count}
+                                        </Typography>
+                                    </Stack>
                                 ))}
                             </Stack>
                         </AccordionDetails>

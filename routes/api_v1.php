@@ -19,4 +19,5 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware(['auth:api'])->name('logout');
 
+Route::get('books/filters', [BooksController::class, 'filters'])->name('books.filters');
 Route::resource('books', BooksController::class);
