@@ -1,10 +1,11 @@
-import React from "react";
+import { AppLayout } from "layouts/AppLayout";
+import BooksPage from "pages/Books/BooksPage";
 
 function App() {
     return (
-        <div className="App">
-            <h2>React with Laravel</h2>
-        </div>
+        <AppLayout>
+            <BooksPage />
+        </AppLayout>
     );
 }
 

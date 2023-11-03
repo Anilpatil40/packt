@@ -19,12 +19,22 @@ class BooksController extends Controller
      */
     public function index(Request $request)
     {
-        $books = Book::limit($request->get('quantity'));
+        $quantity = $request->get('quantity');
+        $page = $request->get('page');
+        $books = Book::query();
+        if ($request->get('order') == 'date.asc') {
+            $books->orderBy('published', 'asc');
+        } else if ($request->get('order') == 'date.desc') {
+            $books->orderBy('published', 'desc');
+        }
+        $count = $books->count();
+        $books->limit($quantity)->offset($quantity * ($page - 1));
 
         return response()->json([
             'status' => 'OK',
             'code' => 200,
             'total' => (int)$request->get('quantity'),
+            'count' => $count,
             'data' => $books->get(),
         ]);
     }
