@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\V1\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| API V1 Routes
 |--------------------------------------------------------------------------
 |
 | Here is where you can register API routes for your application. These
@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// v1 routes
-Route::prefix('v1')
-    ->group(base_path('routes/api_v1.php'));
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware(['auth:api'])->name('logout');
