@@ -11,7 +11,7 @@ class BooksController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['index', 'filters', 'show']);
+        $this->middleware(['auth:api', 'auth.api.admin'])->except(['index', 'filters', 'show']);
     }
     /**
      * Display a listing of the resource.
@@ -99,7 +99,24 @@ class BooksController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'genre' => 'required|string|max:255',
+            'description' => 'required|string',
+            'isbn' => 'required|string|max:13|min:13',
+            'publisher' => 'required|string',
+            'published' => 'required|date',
+        ]);
+
+        $book = new Book($validatedData);
+        $book->save();
+
+        return response()->json([
+            'status' => 'OK',
+            'code' => 200,
+            'message' => 'Book added successfully'
+        ]);
     }
 
     /**
@@ -133,7 +150,33 @@ class BooksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'genre' => 'required|string|max:255',
+            'description' => 'required|string',
+            'isbn' => 'required|string|max:13|min:13',
+            'publisher' => 'required|string',
+            'published' => 'required|date',
+        ]);
+
+        $book = Book::find($id);
+
+        if (!$book) {
+            return response()->json([
+                'status' => 'OK',
+                'code' => 404,
+                'message' => 'Book not found'
+            ], 404);
+        }
+
+        $book->update($validatedData);
+
+        return response()->json([
+            'status' => 'OK',
+            'code' => 200,
+            'message' => 'Book updated successfully'
+        ]);
     }
 
     /**
@@ -144,6 +187,21 @@ class BooksController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $book = Book::find($id);
+        if (!$book) {
+            return response()->json([
+                'status' => 'OK',
+                'code' => 404,
+                'message' => 'Book not found'
+            ], 404);
+        }
+
+        $book->delete();
+
+        return response()->json([
+            'status' => 'OK',
+            'code' => 200,
+            'message' => 'Book updated successfully'
+        ]);
     }
 }

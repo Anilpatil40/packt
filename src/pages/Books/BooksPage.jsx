@@ -1,7 +1,8 @@
-import { Search } from "@mui/icons-material";
+import { Add, Search } from "@mui/icons-material";
 import {
     Box,
     Container,
+    Fab,
     IconButton,
     InputAdornment,
     MenuItem,
@@ -11,12 +12,16 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import moment from "moment/moment";
+import { useAuthContext } from "contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { BookCard } from "./components/BookCard";
+import { DeleteBookDrawer } from "./components/DeleteBookDrawer";
+import { EditBookDrawer } from "./components/EditBookDrawer";
 import { FilterBar } from "./components/FilterBar";
+import { NewBookDrawer } from "./components/NewBookDrawer";
 
 const BooksPage = () => {
+    const { user } = useAuthContext();
     const [response, setResponse] = useState({});
     const [options, setOptions] = useState({
         quantity: 12,
@@ -26,6 +31,9 @@ const BooksPage = () => {
         filters: {},
     });
     const [filters, setFilters] = useState({});
+    const [isNewBookDrawerOpen, setIsNewBookDrawerOpen] = useState(false);
+    const [bookToEdit, setBookToEdit] = useState(null);
+    const [bookToDelete, setBookToDelete] = useState(null);
 
     useEffect(() => {
         const filters = {};
@@ -164,18 +172,35 @@ const BooksPage = () => {
                             />
                         </Stack>
                         <Stack flex={1}>
+                            <Stack direction={"row"}>
+                                {user?.isAdmin ? (
+                                    <Fab
+                                        sx={{
+                                            marginTop: -2.5,
+                                        }}
+                                        size="small"
+                                        color="primary"
+                                        className="ms-auto"
+                                        onClick={() =>
+                                            setIsNewBookDrawerOpen(true)
+                                        }
+                                    >
+                                        <Add />
+                                    </Fab>
+                                ) : null}
+                            </Stack>
                             <Box className="row p-2">
                                 {response?.data?.map((book, index) => {
                                     return (
                                         <BookCard
                                             key={index}
-                                            title={book.title}
-                                            description={book.description}
-                                            image={book.image}
-                                            author={book.author}
-                                            publishedDate={moment(
-                                                book.published
-                                            ).format("MMM YYYY")}
+                                            book={book}
+                                            onEditClick={(book) => {
+                                                setBookToEdit(book);
+                                            }}
+                                            onDeleteClick={(book) => {
+                                                setBookToDelete(book);
+                                            }}
                                         />
                                     );
                                 })}
@@ -201,6 +226,20 @@ const BooksPage = () => {
                                     }}
                                 />
                             </Stack>
+                            <NewBookDrawer
+                                onClose={() => setIsNewBookDrawerOpen(false)}
+                                open={isNewBookDrawerOpen}
+                            />
+                            <EditBookDrawer
+                                book={bookToEdit}
+                                onClose={() => setBookToEdit(null)}
+                                open={bookToEdit ? true : false}
+                            />
+                            <DeleteBookDrawer
+                                book={bookToDelete}
+                                onClose={() => setBookToDelete(null)}
+                                open={bookToDelete ? true : false}
+                            />
                         </Stack>
                     </Box>
                 </Container>

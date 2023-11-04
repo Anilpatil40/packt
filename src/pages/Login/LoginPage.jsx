@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { useAuthContext } from "contexts/AuthContext";
 import { useFormik } from "formik";
+import { setCookie } from "pages/helper/browser";
 import { useNavigate } from "react-router-dom";
 import { loginValidationSchema } from "./loginValidationSchema";
 
@@ -44,6 +45,7 @@ const LoginPage = () => {
         });
         const body = await response.json();
         if (response.ok) {
+            setCookie("token", body.token, 30);
             setUser(body.user);
             navigate("/");
         } else {

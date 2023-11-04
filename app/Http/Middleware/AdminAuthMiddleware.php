@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ForceJsonResponse
+class AdminAuthMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,10 @@ class ForceJsonResponse
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->cookie('token') && !$request->header('Authorization')) {
-            $request->headers->set('Authorization', 'Bearer ' . $request->cookie('token'));
+        if ($request->user() && $request->user()->isAdmin) {
+            return $next($request);
         }
-        $request->headers->set('Accept', 'application/json');
-        return $next($request);
+
+        return response()->json(['message' => 'Unauthorized'], 401);
     }
 }
