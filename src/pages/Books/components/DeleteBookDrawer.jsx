@@ -1,6 +1,6 @@
 import { Box, Button, Stack, SwipeableDrawer, Typography } from "@mui/material";
 
-export const DeleteBookDrawer = ({ book, open, onClose }) => {
+export const DeleteBookDrawer = ({ book, open, onClose, onComplete }) => {
     async function onSubmit() {
         const response = await fetch(`/api/v1/books/${book.id}`, {
             method: "DELETE",
@@ -8,6 +8,7 @@ export const DeleteBookDrawer = ({ book, open, onClose }) => {
         });
         const body = await response.json();
         if (response.ok) {
+            onComplete?.();
             closeDrawer();
         } else {
         }

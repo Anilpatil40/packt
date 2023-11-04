@@ -229,16 +229,25 @@ const BooksPage = () => {
                             <NewBookDrawer
                                 onClose={() => setIsNewBookDrawerOpen(false)}
                                 open={isNewBookDrawerOpen}
+                                onComplete={() =>
+                                    setOptions((pre) => ({ ...pre }))
+                                }
                             />
                             <EditBookDrawer
                                 book={bookToEdit}
                                 onClose={() => setBookToEdit(null)}
                                 open={bookToEdit ? true : false}
+                                onComplete={() =>
+                                    setOptions((pre) => ({ ...pre }))
+                                }
                             />
                             <DeleteBookDrawer
                                 book={bookToDelete}
                                 onClose={() => setBookToDelete(null)}
                                 open={bookToDelete ? true : false}
+                                onComplete={() =>
+                                    setOptions((pre) => ({ ...pre }))
+                                }
                             />
                         </Stack>
                     </Box>

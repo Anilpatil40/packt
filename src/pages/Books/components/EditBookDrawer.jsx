@@ -13,7 +13,7 @@ import {
 import { useFormik } from "formik";
 import { editBookSchema } from "../schemas/editBookSchema";
 
-export const EditBookDrawer = ({ book, open, onClose }) => {
+export const EditBookDrawer = ({ book, open, onClose, onComplete }) => {
     const {
         values,
         errors,
@@ -46,6 +46,7 @@ export const EditBookDrawer = ({ book, open, onClose }) => {
         });
         const body = await response.json();
         if (response.ok) {
+            onComplete?.();
             closeDrawer();
         } else {
             setErrors(body.errors);
