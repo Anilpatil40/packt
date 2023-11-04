@@ -39,7 +39,7 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email|exists:users',
             'password' => 'required|string',
-        ],[
+        ], [
             'email.exists' => 'User not found with the email provided',
         ]);
 
@@ -56,7 +56,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return response()->json(['error' => 'Wrong password'], 401);
+        return response()->json(['errors' => ['password' => 'Password does not match']], 401);
     }
 
     public function user(Request $request)

@@ -1,11 +1,26 @@
-import { AppLayout } from "layouts/AppLayout";
-import BooksPage from "pages/Books/BooksPage";
+import { routes } from "constants/routes";
+import { AuthContext } from "contexts/AuthContext";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
     return (
-        <AppLayout>
-            <BooksPage />
-        </AppLayout>
+        <AuthContext>
+            <BrowserRouter>
+                <Routes>
+                    {routes.map((AppRoute, index) => (
+                        <Route
+                            key={index}
+                            path={AppRoute.path}
+                            element={
+                                <AppRoute.Layout>
+                                    <AppRoute.Component />
+                                </AppRoute.Layout>
+                            }
+                        />
+                    ))}
+                </Routes>
+            </BrowserRouter>
+        </AuthContext>
     );
 }
 
