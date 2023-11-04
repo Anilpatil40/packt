@@ -109,6 +109,13 @@ class BooksController extends Controller
             'published' => 'required|date',
         ]);
 
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = date("YmdHis") . "_" . uniqid() . "." . $file->extension();
+            $file->storeAs('public/uploads', $fileName);
+            $validatedData['image'] = "/storage/uploads/" . $fileName;
+        }
+
         $book = new Book($validatedData);
         $book->save();
 
@@ -168,6 +175,13 @@ class BooksController extends Controller
                 'code' => 404,
                 'message' => 'Book not found'
             ], 404);
+        }
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = date("YmdHis") . "_" . uniqid() . "." . $file->extension();
+            $file->storeAs('public/uploads', $fileName);
+            $validatedData['image'] = "/storage/uploads/" . $fileName;
         }
 
         $book->update($validatedData);

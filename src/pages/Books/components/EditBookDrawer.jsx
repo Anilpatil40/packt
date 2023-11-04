@@ -23,8 +23,9 @@ export const EditBookDrawer = ({ book, open, onClose, onComplete }) => {
         handleBlur,
         setErrors,
         resetForm,
+        setFieldValue,
     } = useFormik({
-        initialValues: book || {
+        initialValues: { ...book, image: "" } || {
             title: "",
             author: "",
             genre: "",
@@ -32,6 +33,7 @@ export const EditBookDrawer = ({ book, open, onClose, onComplete }) => {
             isbn: "",
             published: "",
             publisher: "",
+            image: "",
         },
         validationSchema: editBookSchema,
         onSubmit,
@@ -39,10 +41,14 @@ export const EditBookDrawer = ({ book, open, onClose, onComplete }) => {
     });
 
     async function onSubmit(values) {
+        const formData = new FormData();
+        Object.keys(values).forEach((key) => {
+            formData.append(key, values[key]);
+        });
+        formData.append("_method", "PUT");
         const response = await fetch(`/api/v1/books/${book.id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(values),
+            method: "POST",
+            body: formData,
         });
         const body = await response.json();
         if (response.ok) {
@@ -61,6 +67,7 @@ export const EditBookDrawer = ({ book, open, onClose, onComplete }) => {
         { name: "isbn", label: "ISBN" },
         { name: "publisher", label: "Publisher" },
         { name: "published", label: "Published Date" },
+        { name: "image", label: "Image", type: "file" },
     ];
 
     function closeDrawer() {
@@ -89,8 +96,19 @@ export const EditBookDrawer = ({ book, open, onClose, onComplete }) => {
                                 <FormLabel>{form.label}</FormLabel>
                                 <OutlinedInput
                                     name={form.name}
+                                    type={form.type ?? "text"}
                                     value={values?.[form.name]}
-                                    onChange={handleChange}
+                                    onChange={
+                                        form.type === "file"
+                                            ? (event) => {
+                                                  setFieldValue(
+                                                      "file",
+                                                      event.currentTarget
+                                                          .files[0]
+                                                  );
+                                              }
+                                            : handleChange
+                                    }
                                     onBlur={handleBlur}
                                     multiline={form.multi}
                                     minRows={form.multi ? 4 : 1}
