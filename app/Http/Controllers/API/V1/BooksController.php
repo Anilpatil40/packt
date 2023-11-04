@@ -24,6 +24,7 @@ class BooksController extends Controller
         $page = $request->get('page');
         $genres = $request->get('genres');
         $publishedYears = $request->get('publishedYears');
+        $search = $request->get('search');
         $books = Book::query();
         if ($request->get('order') == 'date.asc') {
             $books->orderBy('published', 'asc');
@@ -35,6 +36,11 @@ class BooksController extends Controller
         }
         if ($publishedYears) {
             $books->whereIn(DB::raw('YEAR(published)'), explode('~', $publishedYears));
+        }
+        if ($search) {
+            $books->where('title', 'LIKE', "%$search%");
+            $books->orWhere('author', 'LIKE', "%$search%");
+            $books->orWhere('genre', 'LIKE', "%$search%");
         }
         $count = $books->count();
         $books->limit($quantity)->offset($quantity * ($page - 1));

@@ -22,6 +22,7 @@ const BooksPage = () => {
         quantity: 12,
         orderBy: "date.asc",
         page: 1,
+        search: "",
         filters: {},
     });
     const [filters, setFilters] = useState({});
@@ -38,6 +39,7 @@ const BooksPage = () => {
             quantity: options.quantity,
             order: options.orderBy,
             page: options.page,
+            search: options.search,
             ...filters,
         };
         fetch(`/api/v1/books?${new URLSearchParams(urlParams).toString()}`)
@@ -78,6 +80,13 @@ const BooksPage = () => {
                                 </InputAdornment>
                             }
                             sx={{ width: "100%", maxWidth: 500 }}
+                            onChange={(e) => {
+                                setOptions((prev) => ({
+                                    ...prev,
+                                    search: e.target.value,
+                                    page: 1,
+                                }));
+                            }}
                         />
                         <Select
                             className="ms-auto rounded-pill"
