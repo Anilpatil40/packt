@@ -46,6 +46,7 @@ const LoginPage = () => {
         const body = await response.json();
         if (response.ok) {
             setCookie("token", body.token, 30);
+            localStorage.setItem("user", JSON.stringify(body.user));
             setUser(body.user);
             navigate("/");
         } else {
