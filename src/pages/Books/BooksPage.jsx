@@ -177,22 +177,33 @@ const BooksPage = () => {
                                     </Fab>
                                 ) : null}
                             </Stack>
-                            <Box className="row p-2">
-                                {response?.data?.map((book, index) => {
-                                    return (
-                                        <BookCard
-                                            key={index}
-                                            book={book}
-                                            onEditClick={(book) => {
-                                                setBookToEdit(book);
-                                            }}
-                                            onDeleteClick={(book) => {
-                                                setBookToDelete(book);
-                                            }}
-                                        />
-                                    );
-                                })}
-                            </Box>
+                            {response?.data.length === 0 && (
+                                <Stack
+                                    fontSize={24}
+                                    alignItems={"center"}
+                                    className="p-5"
+                                >
+                                    No Data Found
+                                </Stack>
+                            )}
+                            {response?.data && (
+                                <Box className="row p-2">
+                                    {response?.data?.map((book, index) => {
+                                        return (
+                                            <BookCard
+                                                key={index}
+                                                book={book}
+                                                onEditClick={(book) => {
+                                                    setBookToEdit(book);
+                                                }}
+                                                onDeleteClick={(book) => {
+                                                    setBookToDelete(book);
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </Box>
+                            )}
                             <Stack className="my-3" alignItems={"center"}>
                                 <Pagination
                                     page={options.page}
