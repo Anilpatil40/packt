@@ -35,7 +35,7 @@
     > [ name, email, password ]
 -   logout: logout for customer and admin
 
-    > /api/v1/register
+    > /api/v1/logout
     > POST
 
 -   get books: fetch books by filters
