@@ -20,6 +20,7 @@ export const BookCard = ({ book, onEditClick, onDeleteClick }) => {
                         <img
                             className="rounded"
                             src={book.image ?? packtImage}
+                            onError={(e) => (e.target.src = packtImage)}
                             alt="sample"
                             style={{
                                 width: 100,

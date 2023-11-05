@@ -11,7 +11,7 @@ class BooksController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth:api', 'auth.api.admin'])->except(['index', 'filters', 'show']);
+        $this->middleware(['auth:api', 'auth.api.admin'])->except(['index', 'filters', 'search', 'show']);
     }
     /**
      * Display a listing of the resource.
@@ -78,6 +78,22 @@ class BooksController extends Controller
             'status' => 'OK',
             'code' => 200,
             'data' => ['genres' => $genres, 'publishedYears' => $publishedYears],
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $books = Book::search($request->get('search'))->get();
+
+        return response()->json([
+            'status' => 'OK',
+            'code' => 200,
+            'data' => $books,
         ]);
     }
 

@@ -1,0 +1,12 @@
+version: '3'
+services:
+    web:
+        image: tomsik68/xampp:latest
+        ports:
+            - 80:80
+            - 443:443
+            - 3306:3306
+    elasticsearch:
+        image: getmeili/meilisearch
+        ports:
+            - 7700:7700

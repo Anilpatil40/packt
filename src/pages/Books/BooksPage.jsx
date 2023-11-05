@@ -1,17 +1,15 @@
-import { Add, Search } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import {
     Box,
     Container,
     Fab,
-    IconButton,
-    InputAdornment,
     MenuItem,
-    OutlinedInput,
     Pagination,
     Select,
     Stack,
     Typography,
 } from "@mui/material";
+import { SearchAutoComplete } from "components/inputs/SearchAutoComplete";
 import { useAuthContext } from "contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { BookCard } from "./components/BookCard";
@@ -76,22 +74,12 @@ const BooksPage = () => {
             <Stack className="border-bottom py-4">
                 <Container>
                     <Stack direction={"row"} alignItems={"center"} gap={2}>
-                        <OutlinedInput
-                            size="small"
-                            placeholder="Search"
-                            className="rounded-pill"
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton aria-label="search" edge="end">
-                                        <Search />
-                                    </IconButton>
-                                </InputAdornment>
-                            }
+                        <SearchAutoComplete
                             sx={{ width: "100%", maxWidth: 500 }}
-                            onChange={(e) => {
+                            onOptionSelect={(option) => {
                                 setOptions((prev) => ({
                                     ...prev,
-                                    search: e.target.value,
+                                    search: option,
                                     page: 1,
                                 }));
                             }}
