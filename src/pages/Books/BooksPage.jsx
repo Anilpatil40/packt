@@ -177,7 +177,7 @@ const BooksPage = () => {
                                     </Fab>
                                 ) : null}
                             </Stack>
-                            {response?.data.length === 0 && (
+                            {response?.data?.length === 0 && (
                                 <Stack
                                     fontSize={24}
                                     alignItems={"center"}
