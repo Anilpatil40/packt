@@ -16,12 +16,16 @@ import { useParams } from "react-router-dom";
 const BookInfo = () => {
     const [book, setBook] = useState(null);
     const { bookId } = useParams();
+    const [bookNotFound, setBookNotFound] = useState(false);
 
     useEffect(() => {
         fetch(`/api/v1/books/${bookId}`)
             .then((resp) => resp.json())
             .then((resp) => {
                 setBook(resp.data);
+                if (resp.code === 404) {
+                    setBookNotFound(true);
+                }
             })
             .catch((error) => console.log(error));
 
@@ -55,6 +59,14 @@ const BookInfo = () => {
                     </Box>
                     <Box className="col-md-7 mb-3">
                         <Stack minHeight={400} className="bg-body-secondary">
+                            {bookNotFound && (
+                                <Typography
+                                    fontSize={20}
+                                    className="m-auto text-secondary"
+                                >
+                                    Book Not Found
+                                </Typography>
+                            )}
                             {book && (
                                 <TableContainer component={Paper}>
                                     <Table aria-label="simple table">
