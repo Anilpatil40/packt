@@ -12,6 +12,7 @@ import {
 import { SearchAutoComplete } from "components/inputs/SearchAutoComplete";
 import { useAuthContext } from "contexts/AuthContext";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BookCard } from "./components/BookCard";
 import { DeleteBookDrawer } from "./components/DeleteBookDrawer";
 import { EditBookDrawer } from "./components/EditBookDrawer";
@@ -20,6 +21,7 @@ import { NewBookDrawer } from "./components/NewBookDrawer";
 
 const BooksPage = () => {
     const { user } = useAuthContext();
+    const navigate = useNavigate();
     const [response, setResponse] = useState({});
     const [options, setOptions] = useState({
         quantity: 12,
@@ -193,6 +195,11 @@ const BooksPage = () => {
                                             <BookCard
                                                 key={index}
                                                 book={book}
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/books/${book.id}`
+                                                    )
+                                                }
                                                 onEditClick={(book) => {
                                                     setBookToEdit(book);
                                                 }}

@@ -36,6 +36,8 @@ export const AppLayout = ({ children }) => {
                                     fontWeight: 700,
                                     textDecoration: "none",
                                 }}
+                                onClick={() => navigate("/")}
+                                role="button"
                             >
                                 {"<packt>"}
                             </Typography>

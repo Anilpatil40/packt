@@ -4,12 +4,12 @@ import packtImage from "assets/images/packt.png";
 import { useAuthContext } from "contexts/AuthContext";
 import moment from "moment/moment";
 
-export const BookCard = ({ book, onEditClick, onDeleteClick }) => {
+export const BookCard = ({ book, onEditClick, onDeleteClick, onClick }) => {
     const { user } = useAuthContext();
 
     return (
         <Box className="col-md-6 col-lg-4 px-3" sx={{ paddingTop: 10 }}>
-            <Box className="h-100 border rounded p-3" role="button">
+            <Box role="button" className="h-100 border rounded p-3">
                 <Stack
                     sx={{
                         zIndex: 100,
@@ -43,7 +43,7 @@ export const BookCard = ({ book, onEditClick, onDeleteClick }) => {
                             </Stack>
                         ) : null}
                     </Stack>
-                    <Typography className="text-primary mt-4">
+                    <Typography className="text-primary mt-4" onClick={onClick}>
                         {book.title.length > 50
                             ? book.title.substring(0, 50) + "..."
                             : book.title}
