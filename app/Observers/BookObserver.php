@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Events\UpdateScoutImport;
+use App\Jobs\UpdateScoutImport;
 use App\Models\Book;
 
 class BookObserver
