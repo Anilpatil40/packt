@@ -1,4 +1,10 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Search } from "@mui/icons-material";
+import {
+    Autocomplete,
+    IconButton,
+    InputAdornment,
+    TextField,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 
 export const SearchAutoComplete = ({ url, onOptionSelect, ...props }) => {
@@ -44,6 +50,16 @@ export const SearchAutoComplete = ({ url, onOptionSelect, ...props }) => {
                             borderRadius: 50,
                             paddingX: "10px !important",
                         },
+                    }}
+                    InputProps={{
+                        ...params.InputProps,
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <IconButton edge="end">
+                                    <Search />
+                                </IconButton>
+                            </InputAdornment>
+                        ),
                     }}
                 />
             )}
