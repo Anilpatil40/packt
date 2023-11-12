@@ -1,6 +1,7 @@
 import { Add } from "@mui/icons-material";
 import {
     Box,
+    CircularProgress,
     Container,
     Fab,
     MenuItem,
@@ -34,8 +35,10 @@ const BooksPage = () => {
     const [isNewBookDrawerOpen, setIsNewBookDrawerOpen] = useState(false);
     const [bookToEdit, setBookToEdit] = useState(null);
     const [bookToDelete, setBookToDelete] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        setLoading(true);
         const filters = {};
         Object.keys(options.filters).map((key) => {
             filters[key] = options.filters[key]
@@ -57,6 +60,9 @@ const BooksPage = () => {
             })
             .catch((error) => {
                 console.log(error);
+            })
+            .finally(() => {
+                setLoading(false);
             });
     }, [options]);
 
@@ -163,7 +169,7 @@ const BooksPage = () => {
                         </Stack>
                         <Stack flex={1}>
                             <Stack direction={"row"}>
-                                {user?.isAdmin ? (
+                                {user?.isAdmin && (
                                     <Fab
                                         sx={{
                                             marginTop: -2.5,
@@ -177,9 +183,14 @@ const BooksPage = () => {
                                     >
                                         <Add />
                                     </Fab>
-                                ) : null}
+                                )}
                             </Stack>
-                            {response?.data?.length === 0 && (
+                            {loading && (
+                                <Stack paddingY={10} alignItems={"center"}>
+                                    <CircularProgress />
+                                </Stack>
+                            )}
+                            {!loading && response?.data?.length === 0 && (
                                 <Stack
                                     fontSize={24}
                                     alignItems={"center"}
@@ -188,7 +199,7 @@ const BooksPage = () => {
                                     No Data Found
                                 </Stack>
                             )}
-                            {response?.data && (
+                            {!loading && response?.data && (
                                 <Box className="row p-2">
                                     {response?.data?.map((book, index) => {
                                         return (
@@ -211,27 +222,29 @@ const BooksPage = () => {
                                     })}
                                 </Box>
                             )}
-                            <Stack className="my-3" alignItems={"center"}>
-                                <Pagination
-                                    page={options.page}
-                                    count={
-                                        response?.count
-                                            ? Math.ceil(
-                                                  response?.count /
-                                                      options.quantity
-                                              )
-                                            : 0
-                                    }
-                                    variant="outlined"
-                                    shape="rounded"
-                                    onChange={(e, page) => {
-                                        setOptions((prev) => ({
-                                            ...prev,
-                                            page: page,
-                                        }));
-                                    }}
-                                />
-                            </Stack>
+                            {!loading && response?.data?.length !== 0 && (
+                                <Stack className="my-3" alignItems={"center"}>
+                                    <Pagination
+                                        page={options.page}
+                                        count={
+                                            response?.count
+                                                ? Math.ceil(
+                                                      response?.count /
+                                                          options.quantity
+                                                  )
+                                                : 0
+                                        }
+                                        variant="outlined"
+                                        shape="rounded"
+                                        onChange={(e, page) => {
+                                            setOptions((prev) => ({
+                                                ...prev,
+                                                page: page,
+                                            }));
+                                        }}
+                                    />
+                                </Stack>
+                            )}
                             <NewBookDrawer
                                 onClose={() => setIsNewBookDrawerOpen(false)}
                                 open={isNewBookDrawerOpen}

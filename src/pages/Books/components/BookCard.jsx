@@ -30,18 +30,26 @@ export const BookCard = ({ book, onEditClick, onDeleteClick, onClick }) => {
                                 marginTop: -80,
                             }}
                         />
-                        {user?.isAdmin ? (
+                        {user?.isAdmin && (
                             <Stack direction={"row"} className="ms-auto">
-                                <IconButton onClick={() => onEditClick?.(book)}>
-                                    <Edit color="primary" />
-                                </IconButton>
-                                <IconButton
-                                    onClick={() => onDeleteClick?.(book)}
-                                >
-                                    <Delete color="primary" />
-                                </IconButton>
+                                <Stack>
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => onEditClick?.(book)}
+                                    >
+                                        <Edit color="primary" />
+                                    </IconButton>
+                                </Stack>
+                                <Stack>
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => onDeleteClick?.(book)}
+                                    >
+                                        <Delete color="error" />
+                                    </IconButton>
+                                </Stack>
                             </Stack>
-                        ) : null}
+                        )}
                     </Stack>
                     <Typography className="text-primary mt-4" onClick={onClick}>
                         {book.title.length > 50

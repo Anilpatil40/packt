@@ -6,7 +6,6 @@ export const SearchAutoComplete = ({ url, onOptionSelect, ...props }) => {
     const [value, setValue] = useState("");
 
     useEffect(() => {
-        console.log(value);
         if (!value) {
             setOptions([]);
             return;
@@ -24,8 +23,6 @@ export const SearchAutoComplete = ({ url, onOptionSelect, ...props }) => {
                 console.log(error);
             });
     }, [value]);
-
-    console.log(value, options);
 
     return (
         <Autocomplete
@@ -50,8 +47,8 @@ export const SearchAutoComplete = ({ url, onOptionSelect, ...props }) => {
                     }}
                 />
             )}
-            onSelect={(e) => {
-                onOptionSelect?.(e.target.value);
+            onChange={(_, value) => {
+                onOptionSelect?.(value ?? "");
             }}
         />
     );
